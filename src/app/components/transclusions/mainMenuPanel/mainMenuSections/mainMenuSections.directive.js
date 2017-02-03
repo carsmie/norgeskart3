@@ -32,25 +32,7 @@ angular.module('mainMenuSections')
                         }
                     };
 
-                    scope.getSelectedLanguageStyle = function (active) {
-                        if (active){
-                            return 'glyphicon glyphicon-ok-sign pointer-cursor';
-                        }else{
-                            return 'icon-radio-unchecked pointer-cursor';
-                        }
-                    };
-
-                    scope.getUnselectLanguage = function () {
-                        for (var i = 0; i < scope.languages.length; i++){
-                            if (!scope.languages[i].active){
-                                return scope.languages[i];
-                            }
-                        }
-                        return "";
-                    };
-
-                    scope.changeLanguage = function () {
-                        var langId = scope.getUnselectLanguage().id;
+                    scope.changeLanguage = function (langId) {
                         isyTranslateFactory.setCurrentLanguage(langId);
                         map.SetTranslateOptions(isyTranslateFactory.getTranslateOptionsByActiveLanguage());
                         $translate.use(langId);
@@ -60,10 +42,6 @@ angular.module('mainMenuSections')
                     $( document ).ready(function() {
                         scope.visibleLayersCount = map.GetVisibleSubLayers().length;
                     });
-
-                    scope.redirectKartverket = function () {
-                        $window.open("http://kartverket.no/");
-                    };
 
                     scope.sendFeedback = function () {
                         var url='mailto:post@kartverket.no?subject=norgeskart.no';
