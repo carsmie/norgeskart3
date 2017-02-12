@@ -40,7 +40,7 @@ angular.module('searchPanel')
 
                     var _parseInput = function (input) {
                         var parsedInput = {},
-                            reResult,
+                            reResult, what3words,
                             decimalPairComma,
                             decimalPairDot,
                             decimalCoordinatesNE,
@@ -50,6 +50,7 @@ angular.module('searchPanel')
                             degMinSecEN;
 
                         // matches two numbers using either . or , as decimal mark. Numbers using . as decimal mark are separated by , or , plus blankspace. Numbers using , as decimal mark are separated by blankspace
+                        what3words = /^[a-zA-Z]+\.[a-zA-Z]+\.[a-zA-Z]+$/;
                         decimalPairComma = /^[ \t]*([0-9]+,[0-9]+|[0-9]+)[ \t]+([0-9]+,[0-9]+|[0-9]+)(?:@([0-9]+))?[ \t]*$/;
                         decimalPairDot = /^[ \t]*([0-9]+\.[0-9]+|[0-9]+)(?:[ \t]+,|,)[ \t]*([0-9]+\.[0-9]+|[0-9]+)(?:@([0-9]+))?[ \t]*$/;
                         decimalCoordinatesNE = /^[ \t]*([0-9]+[,\.][0-9]+|[0-9]+)[ \t]*[°]?[ \t]*[nN]?[ \t]*,?[ \t]*([0-9]+[,\.][0-9]+|[0-9]+)[ \t]*[°]?[ \t]*[eEøØoO]?[ \t]*$/;
@@ -71,7 +72,10 @@ angular.module('searchPanel')
                         };
 
                         if (typeof input === 'string') {
-                            if (decimalPairComma.test(input)) {
+                            if (what3words.test(input)) {
+                                parsedInput.phrase = input;
+                                parsedInput.w3w = true;
+                            } else if (decimalPairComma.test(input)) {
                                 reResult = decimalPairComma.exec(input);
                                 parsedInput.first = parseFloat(reResult[1]);
                                 parsedInput.second = parseFloat(reResult[2]);
@@ -169,12 +173,28 @@ angular.module('searchPanel')
                         return null;
                     };
 
+                    var _w3wSearch = function (query) {
+                        $.ajax({
+                            url: mainAppService.generateWhat3WordsServiceUrl(),
+                            data: query,
+                            dataType: 'JSON',
+                            success: function (r) {
+                                if (!r.position) {
+                                    return;
+                                }
+                                scope.showQueryPoint(scope.contructQueryPoint(parseFloat(r.position[0]), parseFloat(r.position[1]), 'EPSG:4326', 'coordGeo', ''));
+                            }
+                        });
+                    };
+                    
                     var _checkQueryForCoordinates = function (query) {
                         scope.coordinate = true;
                         var epsg = query.split('@')[1];
                         var params = _parseInput(query);
 
-                        if (typeof params.phrase === 'string') {
+                        if (!!params.w3w) {
+                            _w3wSearch(params.phrase);
+                        } else if (typeof params.phrase === 'string') {
                             return false;
                         }
                         var availableUTMZones = searchPanelFactory.getAvailableUTMZones();
@@ -589,7 +609,7 @@ angular.module('searchPanel')
                     };
 
                     var _addLagFargeleggingskartToSearchOptions = function () {
-                        var name= 'lagFargeleggingskart';
+                        var name = 'lagFargeleggingskart';
                         scope.searchOptionsDict[name] = _constructSearchOption(name, 'fa fa-paint-brush', true, 'Lage fargeleggingskart', {});
                     };
 

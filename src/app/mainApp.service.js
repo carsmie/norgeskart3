@@ -9,6 +9,10 @@ angular.module('mainApp')
                 var urlFaktaark = 'https://stadnamn.kartverket.no/fakta/';
                 var urlHavnivaa = "http://api.sehavniva.no/";
 
+                this.generateWhat3WordsServiceUrl = function () {
+                    return url + 'ws/w3w.py';
+                };
+
                 this.uploadGpxFileService = function () {
                     return url + 'ws/upload-gpx.py';
                 };
