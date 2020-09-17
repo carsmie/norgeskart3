@@ -4,6 +4,9 @@ module.exports = function ( karma ) {
      * From where to look for files, starting with the location of this file.
      */
     basePath: '../',
+    browserNoActivityTimeout: 30000,
+    browserDisconnectTolerance: 20,
+
 
     /**
      * This is the list of file patterns to load into the browser during testing.
@@ -25,6 +28,7 @@ module.exports = function ( karma ) {
         'karma-jasmine',
         'karma-ng-html2js-preprocessor',
         'karma-firefox-launcher',
+        'karma-ng-html2js-preprocessor',
         'karma-chrome-launcher',
         'karma-phantomjs-launcher',
         'karma-ie-launcher',
@@ -57,7 +61,7 @@ module.exports = function ( karma ) {
     runnerPort: 9100,
     urlRoot: '/',
 
-    /** 
+    /**
      * Disable file watching by default.
      */
     autoWatch: false,

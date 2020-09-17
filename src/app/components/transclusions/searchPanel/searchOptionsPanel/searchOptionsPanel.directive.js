@@ -14,15 +14,18 @@ angular.module('searchOptionsPanel')
                                 scope.showKoordTransPanel();
                                 break;
                             case ('lagTurkart'):
-                                switchToLayer('Rasterkart');
+                                switchToLayer('rasterkart');
                                 scope.showLagTurKartPanel();
                                 break;
                             case ('lagFargeleggingskart'):
-                                switchToLayer('Rasterkart');
+                                switchToLayer('rasterkart');
                                 scope.showLagFargeleggingskartPanel();
                                 break;
                             case ('lagNodplakat'):
                                 scope.showLagNodplakatPanel();
+                                break;
+                            case ('ssrFakta'):
+                                window.open(searchOption.url, '_blank');
                                 break;
                             default:
                                 if (searchOption.url){
@@ -57,7 +60,7 @@ angular.module('searchOptionsPanel')
                             }
                         });
                     };
-                    
+
                     function switchToLayer(layerName) {
                         var mapSwitched=false;
                         var baselayers=map.GetBaseLayers();

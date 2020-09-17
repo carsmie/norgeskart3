@@ -1,6 +1,9 @@
 angular.module('searchLagNodplakatPanel')
-    .controller('searchLagNodplakatPanelController', [ '$scope','mainAppService','$http','ISY.MapAPI.Map',
-        function($scope, mainAppService,$http, map) {
+    .controller('searchLagNodplakatPanelController', [ '$scope', 'mainAppService', '$http', 'ISY.MapAPI.Map',
+        function ($scope, mainAppService, $http, map) {
+            $scope.lagNodplakatConfirmRoad = false;
+            $scope.valgtTekst = 'CorrectRoad';
+
             $scope.showLagNodplakatPage1 = function () {
                 map.SetCenter($scope.activePosition);
                 $scope.searchLagNodplakatPanelLayout = 'page1';
@@ -38,45 +41,27 @@ angular.module('searchLagNodplakatPanel')
                 var placenamesByBboxUrl = mainAppService.generateSearchStedsnavnBboxUrl(extent[0], extent[1], extent[2], extent[3]);
                 _downloadFromUrl(placenamesByBboxUrl, 'placenamesByBbox');
             };
-            var _parseElevationPointData = function (jsonRoot) {
-                $scope.activePlaceName = jsonRoot.Output[0].Data.LiteralData.Text;
-                $scope.setSearchBarText($scope.activePlaceName);
-                $scope.lagNodplakatName = $scope.activePlaceName;
-            };
-
-            var _parseEmergencyPosterPointData = function (jsonRoot, name) {
-                $scope.lagNodplakatDict[name] = jsonRoot;
-            };
-
-            var _parsePlacenamesByBboxData = function (jsonRoot, name) {
-                $scope.lagNodplakatDict[name] = jsonRoot;
-                if (!$scope.activePlaceName) {
-                    $scope.activePlaceName = jsonRoot[0].stedsnavn;
-                    $scope.setSearchBarText($scope.activePlaceName);
-                    $scope.lagNodplakatName = $scope.activePlaceName;
-                }
-            };
 
             var _retrieveDataFromResponse = function (name, data) {
-                var jsonObject;
-                var jsonRoot;
                 switch (name) {
-                    case('elevationPoint'):
-                        jsonObject = xml.xmlToJSON(data);
-                        jsonRoot = jsonObject.ExecuteResponse.ProcessOutputs;
-                        if (!jsonRoot.Output[0].Data.LiteralData) {
-                            return;
+                    case ('elevationPoint'):
+                        $scope.activePlaceName = data.placename;
+                        $scope.setSearchBarText($scope.activePlaceName);
+                        $scope.lagNodplakatName = $scope.activePlaceName;
+                        break;
+                    case ('emergencyPosterPoint'):
+                        $scope.lagNodplakatDict[name] = data;
+                        if (data.veg === "") {
+                          $scope.nodplakatConfirmRoad = true;
                         }
-                        _parseElevationPointData(jsonRoot, name);
                         break;
-                    case('emergencyPosterPoint'):
-                        jsonRoot = data;
-                        _parseEmergencyPosterPointData(jsonRoot, name);
-                        break;
-                    case('placenamesByBbox'):
-                        jsonObject = data;
-                        jsonRoot = jsonObject.stedsnavn;
-                        _parsePlacenamesByBboxData(jsonRoot, name);
+                    case ('placenamesByBbox'):
+                        $scope.lagNodplakatDict[name] = data.stedsnavn;
+                        if (!$scope.activePlaceName) {
+                            $scope.activePlaceName = data.stedsnavn[0].stedsnavn;
+                            $scope.setSearchBarText($scope.activePlaceName);
+                            $scope.lagNodplakatName = $scope.activePlaceName;
+                        }
                         break;
                 }
             };
@@ -111,9 +96,19 @@ angular.module('searchLagNodplakatPanel')
             $scope.setNodePlagatName = function (value) {
                 $scope.lagNodplakatName = value;
                 $scope.activePlaceName = value;
-
             };
+            $scope.setNodePlagatStreet = function (value) {
+              $scope.activeStreet = value;
+          };
 
-
-        }
-    ]);
+            $scope.setlagNodplakatConfirmRoad = function (value) {
+                $scope.lagNodplakatConfirmRoad = value;
+                $scope.nodplakatConfirmRoad = true;
+                if (value) {
+                  $scope.valgtTekst = 'ja';
+                } else {
+                  $scope.valgtTekst = 'nei';
+                }
+            };
+          }
+  ]);

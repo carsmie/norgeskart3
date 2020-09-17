@@ -1,0 +1,25 @@
+{
+  "extends": ["eslint:recommended"],
+  "parserOptions": {
+    "ecmaVersion": 5
+  },
+  "plugins": [
+    "import"
+  ],
+  "rules": {
+    "no-undef": "off",
+    "max-len": [1, 180, 2, {
+      "ignoreComments": true
+    }],
+    "quote-props": [1, "consistent-as-needed"],
+    "no-cond-assign": [2, "except-parens"],
+    "no-unused-vars": [1, {
+      "vars": "local",
+      "args": "none"
+    }],
+    "no-param-reassign": 0,
+    "no-console": ["error", {
+      "allow": ["warn", "error"]
+    }]
+  }
+}

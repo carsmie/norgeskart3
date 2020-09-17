@@ -1,143 +1,169 @@
 angular.module('searchKoordTransPanel')
-    .controller('searchKoordTransPanelController', [ '$scope','mainAppService','$http', 'searchKoordTransPanelFactory',
-        function($scope, mainAppService,$http, searchKoordTransPanelFactory) {
+  .controller('searchKoordTransPanelController', ['$scope', 'mainAppService', '$http', 'searchKoordTransPanelFactory',
+    function ($scope, mainAppService, $http, searchKoordTransPanelFactory) {
 
-            var _round = function (value, decimals) {
-                return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
-            };
+      var _round = function (value, decimals) {
+        return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
+      };
 
-            var _addSearchOptionToPanel = function (data) {
-                if (($scope.activePosition.resSosiKoordSys == '50') || ($scope.activePosition.resSosiKoordSys == '84')) {
-                    $scope.activePosition.transLat = _round(data.nord,7);
-                    $scope.activePosition.transLon = _round(data.ost,7);
-                }
-                else {
-                    $scope.activePosition.transLat = _round(data.nord,2);
-                    $scope.activePosition.transLon = _round(data.ost,2);
-                }
-            };
+      if (!Math.sign) {
+        Math.sign = function(x) {
+          return ((x > 0) - (x < 0)) || +x;
+        };
+      }
 
-            var _downloadFromUrl = function (url) {
-                $http.get(url).then(function (response) {
-                    _addSearchOptionToPanel(response.data);
-                });
-            };
-
-            $scope._fetchKoordTrans = function (key) {
-                searchKoordTransPanelFactory.setLastSelectedCoorKey(key);
-                $scope.activePosition.resSosiKoordSys = key;
-                var lat = $scope.activePosition.geographicPoint[1];
-                var lon = $scope.activePosition.geographicPoint[0];
-                var koordTransUrl = mainAppService.generateKoordTransUrl(lon, lat, $scope.activePosition.resSosiKoordSys);
-                _downloadFromUrl(koordTransUrl);
-            };
-
-            $scope.generateCoordinateSystems = function () {
-                searchKoordTransPanelFactory.setAdvancedCoordSystem($scope.showAdvancedCoordinateSystems);
-                if ($scope.showAdvancedCoordinateSystems) {
-                    /*$scope.coordinateSystems = {
-                        '84': 'EU89 - Geografisk grader (Lat/Lon)',
-                        '21': 'EU89, UTM-sone 31',
-                        '22': 'EU89, UTM-sone 32',
-                        '23': 'EU89, UTM-sone 33',
-                        '24': 'EU89, UTM-sone 34',
-                        '25': 'EU89, UTM-sone 35',
-                        '26': 'EU89, UTM-sone 36',
-                        '1': 'NGO1948, Gauss-K. Akse 1',
-                        '2': 'NGO1948, Gauss-K. Akse 2',
-                        '3': 'NGO1948, Gauss-K. Akse 3',
-                        '4': 'NGO1948, Gauss-K. Akse 4',
-                        '5': 'NGO1948, Gauss-K. Akse 5',
-                        '6': 'NGO1948, Gauss-K. Akse 6',
-                        '7': 'NGO1948, Gauss-K. Akse 7',
-                        '8': 'NGO1948, Gauss-K. Akse 8',
-                        '50': 'ED50 - Geografisk, grader',
-                        '31': 'ED50, UTM-sone 31',
-                        '32': 'ED50, UTM-sone 32',
-                        '33': 'ED50, UTM-sone 33',
-                        '34': 'ED50, UTM-sone 34',
-                        '35': 'ED50, UTM-sone 35',
-                        '36': 'ED50, UTM-sone 36'
-                    };*/
-                    $scope.coordinateSystems = {
-                        '84': 'EU89_Lat_Lon',
-                        '21': 'EU89_UTM_31',
-                        '22': 'EU89_UTM_32',
-                        '23': 'EU89_UTM_33',
-                        '24': 'EU89_UTM_34',
-                        '25': 'EU89_UTM_35',
-                        '26': 'EU89_UTM_36',
-                        '1': 'NGO1948_GaussK_1',
-                        '2': 'NGO1948_GaussK_2',
-                        '3': 'NGO1948_GaussK_3',
-                        '4': 'NGO1948_GaussK_4',
-                        '5': 'NGO1948_GaussK_5',
-                        '6': 'NGO1948_GaussK_6',
-                        '7': 'NGO1948_GaussK_7',
-                        '8': 'NGO1948_GaussK_8',
-                        '50': 'ED50',
-                        '31': 'ED50_UTM_31',
-                        '32': 'ED50_UTM_32',
-                        '33': 'ED50_UTM_33',
-                        '34': 'ED50_UTM_34',
-                        '35': 'ED50_UTM_35',
-                        '36': 'ED50_UTM_36'
-                    };
-                }
-                else {
-                    /*$scope.coordinateSystems = {
-                        '84': 'EU89 - Geografisk grader (Lat/Lon)',
-                        '21': 'EU89, UTM-sone 31',
-                        '22': 'EU89, UTM-sone 32',
-                        '23': 'EU89, UTM-sone 33',
-                        '24': 'EU89, UTM-sone 34',
-                        '25': 'EU89, UTM-sone 35',
-                        '26': 'EU89, UTM-sone 36'
-                    };*/
-                    $scope.coordinateSystems = {
-                        '84': 'EU89_Lat_Lon',
-                        '21': 'EU89_UTM_31',
-                        '22': 'EU89_UTM_32',
-                        '23': 'EU89_UTM_33',
-                        '24': 'EU89_UTM_34',
-                        '25': 'EU89_UTM_35',
-                        '26': 'EU89_UTM_36'
-                    };
-
-                    // $scope.activePosition.transLat = _round($scope.activePosition.lat,2);
-                    // $scope.activePosition.transLon = _round($scope.activePosition.lon,2);
-                    // $scope.activePosition.resSosiKoordSys = '23';
-                }
-            };
-
-            // $scope.activePosition.transLat = _round($scope.activePosition.lat,2);
-            // $scope.activePosition.transLon = _round($scope.activePosition.lon,2);
-            // $scope.activePosition.resSosiKoordSys = '23';
-            // $scope.generateCoordinateSystems();
-
-            var initCoordSystem = function () {
-                var key = searchKoordTransPanelFactory.getLastSelectedCoorKey();
-                $scope.showAdvancedCoordinateSystems = searchKoordTransPanelFactory.getAdvancedCoordSystem();
-                if (key !== ''){
-                    $scope._fetchKoordTrans(key);
-                }else{
-                    $scope.activePosition.transLat = _round($scope.activePosition.lat,2);
-                    $scope.activePosition.transLon = _round($scope.activePosition.lon,2);
-                    $scope.activePosition.resSosiKoordSys = '23';
-                }
-
-                $scope.generateCoordinateSystems();
-
-
-
-
-            };
-
-            initCoordSystem();
-
-            $scope.getActiveCoorSystem = function () {
-                return  $scope.coordinateSystems[$scope.activePosition.resSosiKoordSys];
-            };
-
+      // The following code snippet are from http://www.movable-type.co.uk/scripts/latlong.html
+      /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
+      /* Geodesy representation conversion functions                        (c) Chris Veness 2002-2017  */
+      /*                                                                                   MIT Licence  */
+      /* www.movable-type.co.uk/scripts/latlong.html                                                    */
+      /* www.movable-type.co.uk/scripts/geodesy/docs/module-dms.html                                    */
+      /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
+      /**
+       * Converts decimal degrees to deg/min/sec format
+       *  - degree, prime, double-prime symbols are added, but sign is discarded, though no compass
+       *    direction is added.
+       *
+       * @private
+       * @param   {number} deg - Degrees to be formatted as specified.
+       * @param   {string} [format=dms] - Return value as 'd', 'dm', 'dms' for deg, deg+min, deg+min+sec.
+       * @param   {number} [dp=0|2|4] - Number of decimal places to use – default 0 for dms, 2 for dm, 4 for d.
+       * @returns {string} Degrees formatted as deg/min/secs according to specified format.
+       */
+      var decToDMS = function (deg, format, dp) {
+        DmsSeparator = '';
+        if (isNaN(deg)) {
+          return null; // give up here if we can't make a number from deg
         }
-    ]);
+
+        // default values
+        if (format === undefined) {
+          format = 'dms';
+        }
+        if (dp === undefined) {
+          switch (format) {
+            case 'd':
+            case 'deg':
+              dp = 7;
+              break;
+            case 'dm':
+            case 'deg+min':
+              dp = 7;
+              break;
+            case 'dms':
+            case 'deg+min+sec':
+              dp = 5;
+              break;
+            default:
+              format = 'dms';
+              dp = 0; // be forgiving on invalid format
+          }
+        }
+
+        var sign = Math.sign(deg) === -1 ? '-' : ''; // remember the sign
+        deg = Math.abs(deg); // (unsigned result ready for appending compass dir'n)
+
+        var dms, d, m, s;
+        switch (format) {
+          default: // invalid format spec!
+          case 'd':
+          case 'deg':
+            d = _round(deg, dp); // round degrees
+            dms = sign + d; // + '°';
+            break;
+          case 'dm':
+          case 'deg+min':
+            d = Math.floor(deg); // get component deg
+            m = _round(((deg * 60) % 60), dp); // get component min & round
+            if (m == 60) {
+              m = 0;
+              d++;
+            } // check for rounding up
+            dms = sign + d + '°' + DmsSeparator + m + '′';
+            break;
+          case 'dms':
+          case 'deg+min+sec':
+            d = Math.floor(deg); // get component deg
+            m = Math.floor((deg * 3600) / 60) % 60; // get component min
+            s = _round((deg * 3600 % 60), dp); // get component sec & round
+            if (s == 60) {
+              s = _round((0), dp);
+              m++;
+            } // check for rounding up
+            if (m == 60) {
+              m = 0;
+              d++;
+            } // check for rounding up
+            dms = sign + d + '°' + DmsSeparator + m + '′' + DmsSeparator + s + '″';
+            break;
+        }
+
+        return dms;
+      };
+      // End snippet
+
+      var _addSearchOptionToPanel = function (data) {
+        if (($scope.activePosition.resSosiKoordSys == '50') || ($scope.activePosition.resSosiKoordSys == '84')) {
+          $scope.activePosition.transLon = decToDMS(data.ost, 'd');
+          $scope.activePosition.transLat = decToDMS(data.nord, 'd');
+          $scope.activePosition.transLon2 = decToDMS(data.ost, 'dm');
+          $scope.activePosition.transLat2 = decToDMS(data.nord, 'dm');
+          $scope.activePosition.transLon3 = decToDMS(data.ost, 'dms');
+          $scope.activePosition.transLat3 = decToDMS(data.nord, 'dms');
+        } else {
+          $scope.activePosition.transLat = _round(data.nord, 2);
+          $scope.activePosition.transLat2 = '';
+          $scope.activePosition.transLat3 = '';
+          $scope.activePosition.transLon = _round(data.ost, 2);
+          $scope.activePosition.transLon2 = '';
+          $scope.activePosition.transLon3 = '';
+        }
+      };
+
+      var _downloadFromUrl = function (url) {
+        $http.get(url).then(function (response) {
+          _addSearchOptionToPanel(response.data);
+        });
+      };
+
+      $scope._fetchKoordTrans = function (key) {
+        searchKoordTransPanelFactory.setLastSelectedCoorKey(key);
+        $scope.activePosition.resSosiKoordSys = key;
+        var lat = $scope.activePosition.geographicPoint[1];
+        var lon = $scope.activePosition.geographicPoint[0];
+        var koordTransUrl = mainAppService.generateKoordTransUrl(lon, lat, $scope.activePosition.resSosiKoordSys);
+        _downloadFromUrl(koordTransUrl);
+      };
+
+      $scope.generateCoordinateSystems = function () {
+        searchKoordTransPanelFactory.setAdvancedCoordSystem($scope.showAdvancedCoordinateSystems);
+        var standard = mainAppService.getCoordinateSystems('standard');
+        var extended = mainAppService.getCoordinateSystems('extended');
+        angular.extend(extended, standard);
+        if ($scope.showAdvancedCoordinateSystems) {
+          $scope.coordinateSystems = extended;
+        } else {
+          $scope.coordinateSystems = standard;
+        }
+      };
+
+      var initCoordSystem = function () {
+        var key = searchKoordTransPanelFactory.getLastSelectedCoorKey();
+        $scope.showAdvancedCoordinateSystems = searchKoordTransPanelFactory.getAdvancedCoordSystem();
+        if (key !== '') {
+          $scope._fetchKoordTrans(key);
+        } else {
+          $scope.activePosition.transLat = _round($scope.activePosition.lat, 2);
+          $scope.activePosition.transLon = _round($scope.activePosition.lon, 2);
+          $scope.activePosition.resSosiKoordSys = '23';
+        }
+        $scope.generateCoordinateSystems();
+      };
+
+      initCoordSystem();
+
+      $scope.getActiveCoorSystem = function () {
+        return $scope.coordinateSystems[$scope.activePosition.resSosiKoordSys];
+      };
+    }
+  ]);

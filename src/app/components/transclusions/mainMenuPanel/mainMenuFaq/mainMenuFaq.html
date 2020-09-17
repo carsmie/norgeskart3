@@ -1,21 +1,50 @@
 <div class="sidenav-group">
-    <ul>
-        <li tabindex="0" data-ng-click="showMainMenuSections()" ng-keypress="showMainMenuSections()">
-            <div class="sidenav-header-text row">
-                <div class="col-xs-1">
-                    <span class="fa fa-question"></span>
-                </div>
-                <div class="col-xs-11">
-                    <span translate="faq_header_txt"></span>
-                    <div class="backbtn">
-                        <span class="glyphicon glyphicon-menu-left"></span>
-                    </div>
-                </div>
-            </div>
-        </li>
-    </ul>
+  <ul>
+    <li tabindex="0" data-ng-click="showMainMenuSections()" ng-keypress="showMainMenuSections()">
+      <div class="sidenav-header-text row">
+        <div class="col-xs-1">
+          <span class="fa fa-question"></span>
+        </div>
+        <div class="col-xs-11">
+          <span class="text-uppercase" translate="tips_og_triks"></span>
+          <div class="backbtn">
+            <span class="glyphicon glyphicon-menu-left"></span>
+          </div>
+        </div>
+      </div>
+    </li>
+  </ul>
 </div>
-
-<div class="sidenav-group">
-
+<div class="sidenav-group faq-items">
+  <div class="spinner-content" data-ng-show="spinnerIsVisible">
+    <div class="app-spinner">
+      <svg class="spinner" viewBox="25 25 50 50">
+        <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
+      </svg>
+    </div>
+  </div>
+  <div class="row" data-ng-show="!spinnerIsVisible">
+    <div class="col-xs-12">
+      <div data-ng-show="failToLoadFaq" class="failToLoad">
+        <span translate="fail_to_load_faq"></span>
+      </div>
+      <ul>
+        <li data-ng-repeat="faqItem in faqItems track by $index" data-ng-click="toggleItem($index)" data-ng-class="{'itemHeader': $index == selectedItem}">
+          <div class="row">
+            <div class="col-xs-11">
+              <span data-ng-bind="faqItem.question"></span>
+            </div>
+            <div class="col-xs-1">
+              <span class="nextbtn glyphicon glyphicon-menu-down" data-ng-class="$index == selectedItem ? 'glyphicon-menu-up' : 'glyphicon-menu-down'"></span>
+            </div>
+          </div>
+          <div class="row itemBody" data-ng-show="$index == selectedItem" data-ng-click="faqItem.open = faqItem.open; $event.stopPropagation();">
+            <div class="col-xs-12">
+              <div class="itemText anchorLink" ng-bind-html="faqItem.answer"></div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>

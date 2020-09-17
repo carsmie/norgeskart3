@@ -1,15 +1,10 @@
-# Bower
-.bower-cache
-.bower-registry
-.bower-tmp
-
 # Sass
 .sass-cache
 
 node_modules
-vendor
 coverage
 build
 dist
 *.appcache
 *.lock
+package-lock.json

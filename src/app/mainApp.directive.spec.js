@@ -1,12 +1,11 @@
 describe ('mainApp test', function(){
 
     beforeEach(module('mainApp', 'mainAppBody.html'));
-    var element,
-        $scope;
+    var $scope;
 
     beforeEach(inject(function($rootScope, $compile) {
         $scope = $rootScope.$new(true);
-        element = $compile('<div main-app></div>')($scope);
+        element = $compile('<div mainApp></div>')($scope);
         $scope.$digest();
     }));
 

@@ -9,7 +9,6 @@ module.exports = {
      */
     build_dir: 'build',
     compile_dir: 'dist',
-    nuget_dir: 'nuget',
 
     /**
      * This is a collection of file patterns that refer to our app code (the
@@ -24,8 +23,7 @@ module.exports = {
         js: [  'src/**/*.js',  '!src/**/*.spec.js', '!src/assets/**/*.js', '!src/lib/log4javascript/log4javascript.js' ],
         jsunit: [ 'src/**/*.spec.js' ],
 
-        atpl: [ 'src/app/**/*.html', 'src/app/**/*.tpl.html' ],
-        ctpl: [ 'src/common/**/*.tpl.html' ],
+        atpl: [ 'src/app/**/*.html', ],
 
         html: [ 'src/index.html'],
         sass: 'src/assets/sass/main.scss'
@@ -37,7 +35,7 @@ module.exports = {
      */
     test_files: {
         js: [
-            'vendor/angular-mocks/angular-mocks.js'
+            'node_modules/angular-mocks/angular-mocks.js'
         ]
     },
 
@@ -70,39 +68,36 @@ module.exports = {
 
     vendor_files: {
         js: [
-            'vendor/jquery/dist/jquery.js',
-            'vendor/angular/angular.js',
-            'vendor/angular-route/angular-route.js',
-            'vendor/bootstrap/dist/js/bootstrap.min.js',
-            'vendor/angular-translate/angular-translate.js',
-            'vendor/proj4/dist/proj4.js',
-            'vendor/es5-shim/es5-shim.js',
-            'vendor/pouchdb/dist/pouchdb.js',
-            'vendor/xml2json/xml2json.js',
-            'vendor/openlayers3/ol-debug.js',
-            'vendor/blob-util/dist/blob-util.min.js',
-            'vendor/maplib/dist/maplib.js',
-            'vendor/xml-to-json/xml.js',
-            'vendor/xml-to-json/json2xml.js',
-            'vendor/angular-utils-pagination/dirPagination.js',
-            'vendor/featherlight/release/featherlight.min.js'
+            'node_modules/jquery/dist/jquery.min.js',
+            'node_modules/angular/angular.min.js',
+            'node_modules/angular-route/angular-route.min.js',
+            'node_modules/bootstrap/dist/js/bootstrap.min.js',
+            'node_modules/angular-translate/dist/angular-translate.min.js',
+            'node_modules/proj4/dist/proj4.js',
+            'external/pouchdb.js',
+            'node_modules/ol/dist/ol.js',
+            'node_modules/blob-util/dist/blob-util.min.js',
+            'node_modules/maplib/dist/maplib-min.js',
+            'node_modules/xml-to-json/xml.min.js',
+            'node_modules/xml-to-json/json2xml.min.js',
+            'node_modules/angular-utils-pagination/dirPagination.js',
+            'node_modules/featherlight/release/featherlight.min.js',
+            'node_modules/angular-sanitize/angular-sanitize.min.js'
         ],
         css: [
-            'vendor/bootstrap/dist/css/bootstrap.min.css',
-            'vendor/featherlight/release/featherlight.min.css'
+            'node_modules/bootstrap/dist/css/bootstrap.min.css',
+            'node_modules/featherlight/release/featherlight.min.css'
         ],
         assets: [
             'src/assets/fonts/'
         ],
         fonts: [
-            'vendor/bootstrap/fonts/glyphicons-halflings-regular.woff',
-            'vendor/bootstrap/fonts/glyphicons-halflings-regular.woff2',
-            'vendor/bootstrap/fonts/glyphicons-halflings-regular.ttf'
+            'node_modules/bootstrap/fonts/glyphicons-halflings-regular.woff',
+            'node_modules/bootstrap/fonts/glyphicons-halflings-regular.woff2',
+            'node_modules/bootstrap/fonts/glyphicons-halflings-regular.ttf',
+            'node_modules/bootstrap/fonts/glyphicons-halflings-regular.eot'
         ]
     },
-    vendor_nuget_excludes: [
-        'vendor/jquery/dist/jquery.js'
-    ],
     jssource_mapclient: [
         '!src/**/*.spec.js',
         'src/app/shared/isyTranslate/**/*.js',
@@ -121,10 +116,10 @@ module.exports = {
         'src/app/components/transclusions/changeBaseLayerPanel/**/*.js',
         'src/app/components/transclusions/menuDraw/**/*.js',
         'src/app/components/transclusions/menuShareMap/**/*.js',
+        'src/app/components/transclusions/menuPrint/**/*.js',
         'src/app/components/transclusions/menuElevationProfile/**/*.js',
         'src/app/components/transclusions/searchPanel/**/*.js',
         'src/app/components/transclusions/tools/**/*.js'
-
     ],
     source_css: [
         '*.css'

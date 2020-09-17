@@ -23,13 +23,23 @@
   }
 
   .logo-overlay{
-    bottom: 18px;
+    //bottom: 18px;
     width: 70px;
   }
 
   .ol-zoom{
     bottom: 10px;
     top: inherit!important;
+  }
+
+  .ol-noembed{
+    bottom: auto !important;
+    top: 12px !important;
+  }
+
+  .ol-geolocation{
+    bottom: 92px !important;
+    top: auto !important;
   }
 
   .nextbtn{
